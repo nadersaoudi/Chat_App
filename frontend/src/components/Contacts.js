@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Logo from "../assets/logo.svg";
-const Contacts = ({ contacts, currentUser }) => {
+const Contacts = ({ contacts, currentUser, changeChat }) => {
   const [currentUserName, setCurrentUserName] = useState(undefined);
   const [currentUserImage, setCurrentUserImage] = useState(undefined);
   const [currentSelected, setCurrentSelected] = useState(undefined);
   useEffect(async () => {
-    const data = await JSON.parse(
-      localStorage.getItem("chat-app-user")
-    );
+    const data = await JSON.parse(localStorage.getItem("chat-app-user"));
     setCurrentUserName(data.username);
     setCurrentUserImage(data.avatarImage);
   }, []);
 
-  const changeCurrentChat = (index, contact) => {};
+  const changeCurrentChat = (index, contact) => {
+    setCurrentSelected(index);
+    changeChat(contact);
+  };
   return (
     <>
       {currentUserImage && currentUserName && (
@@ -26,10 +27,9 @@ const Contacts = ({ contacts, currentUser }) => {
             {contacts.map((contact, index) => {
               return (
                 <div
-                  className={`contact ${
-                    index === currentSelected ? "selected" : ""
-                  }}`}
+                  className={`contact ${index === currentSelected ? "selected" : ""}`}
                   key={index}
+                  onClick={() => changeCurrentChat(index, contact)}
                 >
                   <div className="avatar">
                     <img

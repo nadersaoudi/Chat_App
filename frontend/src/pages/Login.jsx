@@ -25,7 +25,9 @@ const Login = () => {
       }
       if (data.status === true) {
         localStorage.setItem("chat-app-user", JSON.stringify(data.user));
-        navigate("/");
+        setTimeout(() => {
+          navigate("/");
+        }, 1000);
       }
     }
   };
@@ -53,10 +55,10 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if(localStorage.getItem("chat-app-user")){
-        navigate('/')
+    if (localStorage.getItem("chat-app-user")) {
+      navigate("/");
     }
-  }, [])
+  }, []);
   return (
     <>
       <FormContainer>

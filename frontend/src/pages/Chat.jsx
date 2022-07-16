@@ -4,10 +4,12 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { allUsersRoute } from "../utils/APIRoutes";
 import Contacts from "../components/Contacts";
+import Welcome from "../components/Welcome";
 const Chat = () => {
   const navigate = useNavigate();
   const [contacts, setContacts] = useState([]);
   const [currentUser, setCurrentUser] = useState(undefined);
+  const [currentChat, setCurrentChat] = useState(undefined);
   useEffect(async () => {
     if (!localStorage.getItem("chat-app-user")) {
       navigate("/login");
@@ -26,10 +28,18 @@ const Chat = () => {
       }
     }
   }, [currentUser]);
+  const handleChatChange = (chat) => {
+    setCurrentChat(chat);
+  };
   return (
     <Container>
       <div className="container">
-        <Contacts contacts={contacts} currentUse={currentUser} />
+        <Contacts
+          contacts={contacts}
+          currentUse={currentUser}
+          changeChat={handleChatChange}
+        />   
+        <Welcome currentUser={currentUser} />
       </div>
     </Container>
   );
