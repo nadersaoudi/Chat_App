@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import axios from "axios";
+import { Buffer } from "buffer";
 import loader from "../assets/loader.gif";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { setAvatarRoute } from "../utils/APIRoutes";
-import { Buffer } from "buffer";
-
-const SetAvatar = () => {
+export default function SetAvatar() {
   const api = `https://api.multiavatar.com/4645646`;
   const [avatars, setAvatars] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -51,7 +50,7 @@ const SetAvatar = () => {
     const data = [];
     for (let i = 0; i < 5; i++) {
       const image = await axios.get(
-        `${api}/${Math.random(Math.random() * 1000)}`
+        `${api}/${Math.round(Math.random() * 1000)}`
       );
       const buffer = new Buffer(image.data);
       data.push(buffer.toString("base64"));
@@ -150,5 +149,3 @@ const Container = styled.div`
     }
   }
 `;
-
-export default SetAvatar;

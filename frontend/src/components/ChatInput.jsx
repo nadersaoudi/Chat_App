@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import Picker from "emoji-picker-react"; 
+import Picker from "emoji-picker-react";
 import { IoMdSend } from "react-icons/io";
 import { BsEmojiSmileFill } from "react-icons/bs";
-const ChatInput = ({handleSendMsg}) => {
-  
+export default function ChatInput({ handleSendMsg }) {
+   
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [msg, setMsg] = useState("");
 
@@ -139,4 +139,3 @@ const Container = styled.div`
     }
   }
 `;
-export default ChatInput;

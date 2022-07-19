@@ -1,8 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import Robot from "../assets/robot.gif";
-const Welcome = ({ currentUser }) => {
-  
+export default function Welcome({ currentUser }) {
   return (
     <Container>
       <img src={Robot} alt="Robot" />
@@ -12,7 +11,7 @@ const Welcome = ({ currentUser }) => {
       <h3>Pleas select a chat to Start Messeging.</h3>
     </Container>
   );
-};
+}
 const Container = styled.div`
   display: flex;
   justify-content: center;
@@ -26,5 +25,3 @@ const Container = styled.div`
     color: #4e00ff;
   }
 `;
-
-export default Welcome;

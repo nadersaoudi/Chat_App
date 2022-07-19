@@ -2,19 +2,19 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import ChatInput from "./ChatInput";
 import Logout from "./Logout";
-import Messages from "./Messages";
 import axios from "axios";
 import { sendMessageRoute, getAllMessageRoute } from "../utils/APIRoutes";
-const ChatContainer = ({ currentChat, currentUser }) => {
+export default function ChatContainer({ currentChat, currentUser }) {
   const [messages, setMessages] = useState([]);
-  const getMessage = async () => {
+  useEffect(async () => {
     const data = await JSON.parse(localStorage.getItem("chat-app-user"));
     const response = await axios.post(getAllMessageRoute, {
       from: data._id,
       to: currentChat._id,
     });
     setMessages(response.data);
-  };
+  }, [currentChat]);
+
   useEffect(() => {
     const getCurrentChat = async () => {
       if (currentChat) {
@@ -23,9 +23,7 @@ const ChatContainer = ({ currentChat, currentUser }) => {
     };
     getCurrentChat();
   }, [currentChat]);
-  useEffect(() => {
-    getMessage();
-  }, []);
+
   const handleSendMsg = async (msg) => {
     await axios.post(sendMessageRoute, {
       from: currentUser._id,
@@ -55,11 +53,11 @@ const ChatContainer = ({ currentChat, currentUser }) => {
             <div>
               <div
                 className={`message ${
-                  message.fromSelf ? "sended" : "recieved"
+                  message?.fromSelf ? "sended" : "recieved"
                 }`}
               >
                 <div className="content ">
-                  <p>{message.message}</p>
+                  <p>{message?.message}</p>
                 </div>
               </div>
             </div>
@@ -69,7 +67,7 @@ const ChatContainer = ({ currentChat, currentUser }) => {
       <ChatInput handleSendMsg={handleSendMsg} />
     </Container>
   );
-};
+}
 const Container = styled.div`
   display: grid;
   grid-template-rows: 10% 80% 10%;
@@ -142,4 +140,3 @@ const Container = styled.div`
     }
   }
 `;
-export default ChatContainer;

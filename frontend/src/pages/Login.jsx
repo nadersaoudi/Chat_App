@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import styled from "styled-components";
+import { useNavigate, Link } from "react-router-dom";
 import Logo from "../assets/logo.svg";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
 import { loginRoute } from "../utils/APIRoutes";
-const Login = () => {
+
+export default function Login() {
   const navigate = useNavigate();
   const [values, setValues] = useState({
     username: "",
@@ -25,9 +26,7 @@ const Login = () => {
       }
       if (data.status === true) {
         localStorage.setItem("chat-app-user", JSON.stringify(data.user));
-        setTimeout(() => {
-          navigate("/");
-        }, 1000);
+        navigate("/");
       }
     }
   };
@@ -91,7 +90,7 @@ const Login = () => {
       <ToastContainer />
     </>
   );
-};
+}
 
 const FormContainer = styled.div`
   height: 100vh;
@@ -161,5 +160,3 @@ const FormContainer = styled.div`
     }
   }
 `;
-
-export default Login;
