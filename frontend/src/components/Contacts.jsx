@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import Logo from "../assets/logo.svg";
+import Logout from "./Logout";
 const Contacts = ({ contacts, currentUser, changeChat }) => {
   const [currentUserName, setCurrentUserName] = useState(undefined);
   const [currentUserImage, setCurrentUserImage] = useState(undefined);
   const [currentSelected, setCurrentSelected] = useState(undefined);
-  useEffect(async () => {
-    const data = await JSON.parse(localStorage.getItem("chat-app-user"));
-    setCurrentUserName(data.username);
-    setCurrentUserImage(data.avatarImage);
+  useEffect(() => {
+    const user = async () => {
+      const data = await JSON.parse(localStorage.getItem("chat-app-user"));
+      setCurrentUserName(data.username);
+      setCurrentUserImage(data.avatarImage);
+    };
+    user();
   }, []);
 
   const changeCurrentChat = (index, contact) => {
@@ -27,7 +32,9 @@ const Contacts = ({ contacts, currentUser, changeChat }) => {
             {contacts.map((contact, index) => {
               return (
                 <div
-                  className={`contact ${index === currentSelected ? "selected" : ""}`}
+                  className={`contact ${
+                    index === currentSelected ? "selected" : ""
+                  }`}
                   key={index}
                   onClick={() => changeCurrentChat(index, contact)}
                 >
@@ -45,15 +52,19 @@ const Contacts = ({ contacts, currentUser, changeChat }) => {
             })}
           </div>
           <div className="current-user">
-            <div className="avatar">
-              <img
-                src={`data:image/svg+xml;base64,${currentUserImage}`}
-                alt="avatar"
-              />
-            </div>
+            <Link to="/setavatar">
+              <div className="avatar">
+                <img
+                  src={`data:image/svg+xml;base64,${currentUserImage}`}
+                  alt="avatar"
+                />
+              </div>
+            </Link>
+
             <div className="username">
               <h3>{currentUserName}</h3>
             </div>
+            <Logout />
           </div>
         </Container>
       )}

@@ -10,14 +10,17 @@ export default function ChatContainer({ currentChat, currentUser, socket }) {
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const scrollRef = useRef();
 
-  useEffect(async () => {
+  useEffect(() => {
     if (currentChat) {
-      const data = await JSON.parse(localStorage.getItem("chat-app-user"));
-      const response = await axios.post(getAllMessageRoute, {
-        from: data._id,
-        to: currentChat._id,
-      });
-      setMessages(response.data);
+      const fetchData = async () => {
+        const data = await JSON.parse(localStorage.getItem("chat-app-user"));
+        const response = await axios.post(getAllMessageRoute, {
+          from: data._id,
+          to: currentChat._id,
+        });
+        setMessages(response.data);
+      };
+      fetchData();
     }
   }, [currentChat]);
 
@@ -52,7 +55,7 @@ export default function ChatContainer({ currentChat, currentUser, socket }) {
         setArrivalMessage({ fromSelf: false, message: msg });
       });
     }
-  }, []);
+  }, [socket]);
 
   useEffect(() => {
     arrivalMessage && setMessages((prev) => [...prev, arrivalMessage]);

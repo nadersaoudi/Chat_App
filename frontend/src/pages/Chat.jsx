@@ -14,12 +14,16 @@ export default function Chat() {
   const [currentUser, setCurrentUser] = useState(undefined);
   const [currentChat, setCurrentChat] = useState(undefined);
   const [isLoaded, setLoaded] = useState(false);
-  useEffect(async () => {
+  useEffect(() => {
     if (!localStorage.getItem("chat-app-user")) {
       navigate("/login");
     } else {
-      setCurrentUser(await JSON.parse(localStorage.getItem("chat-app-user")));
-      setLoaded(true);
+      const user = async () => {
+        const data = await JSON.parse(localStorage.getItem("chat-app-user"));
+        setCurrentUser(data);
+        setLoaded(true);
+      };
+      user();
     }
   }, []);
   useEffect(() => {
@@ -28,11 +32,14 @@ export default function Chat() {
       socket.current.emit("add-user", currentUser._id);
     }
   }, [currentUser]);
-  useEffect(async () => {
+  useEffect(() => {
     if (currentUser) {
       if (currentUser.isAvatarImageSet) {
-        const data = await axios.get(`${allUsersRoute}/${currentUser._id}`);
-        setContacts(data.data);
+        const fetch = async () => {
+          const data = await axios.get(`${allUsersRoute}/${currentUser._id}`);
+          setContacts(data.data);
+        };
+        fetch();
       } else {
         navigate("/setAvatar");
       }
@@ -52,7 +59,11 @@ export default function Chat() {
         {isLoaded && currentChat === undefined ? (
           <Welcome currentUser={currentUser} />
         ) : (
-          <ChatContainer currentChat={currentChat} currentUser={currentUser} socket={socket} />
+          <ChatContainer
+            currentChat={currentChat}
+            currentUser={currentUser}
+            socket={socket}
+          />
         )}
       </div>
     </Container>

@@ -13,7 +13,7 @@ export default function SetAvatar() {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedAvatar, setSelectedAvatar] = useState(undefined);
   const navigate = useNavigate();
-  const toastOption = {
+  const toastOptions = {
     position: "bottom-right",
     autoClose: 8000,
     pauseOnHover: true,
@@ -21,14 +21,15 @@ export default function SetAvatar() {
     theme: "dark",
   };
 
-  useEffect(async() => {
-    if(!localStorage.getItem("chat-app-user")){
-        navigate("/login");
+  useEffect(() => {
+    if (!localStorage.getItem("chat-app-user")) {
+      navigate("/login");
     }
-  },[])
-  const setProfilePicture = async () => {
-    if (selectedAvatar === undefined) {
-      toast.error("Please Select an Avatar", toastOption);
+  }, []);
+  const setProfilePicture = async (e) => {
+    e.preventDefault();
+    if (selectedAvatar === undefined && isLoading === true) {
+      toast.error("Please Select an Avatar", toastOptions);
     } else {
       const user = await JSON.parse(localStorage.getItem("chat-app-user"));
       const { data } = await axios.post(`${setAvatarRoute}/${user._id}`, {
@@ -46,18 +47,21 @@ export default function SetAvatar() {
     }
   };
 
-  useEffect(async () => {
+  useEffect(() => {
     const data = [];
-    for (let i = 0; i < 5; i++) {
-      const image = await axios.get(
-        `${api}/${Math.round(Math.random() * 1000)}`
-      );
-      const buffer = new Buffer(image.data);
-      data.push(buffer.toString("base64"));
-    }
-    setAvatars(data);
-    setIsLoading(false);
-  }, []);
+    const setImage = async () => {
+      for (let i = 0; i < 5; i++) {
+        const image = await axios.get(
+          `${api}/${Math.round(Math.random() * 1000)}`
+        );
+        const buffer = new Buffer(image.data);
+        data.push(buffer.toString("base64"));
+      }
+      setAvatars(data);
+      setIsLoading(false);
+    };
+    setImage();
+  }, [setAvatars]);
   return (
     <>
       {isLoading ? (
@@ -67,7 +71,7 @@ export default function SetAvatar() {
       ) : (
         <Container>
           <div className="title-container">
-            <h1>Pick an Avatar as your Profile Picture</h1>
+            <h1>Pick an Avatar as your profile picture</h1>
           </div>
           <div className="avatars">
             {avatars.map((avatar, index) => {
@@ -80,22 +84,22 @@ export default function SetAvatar() {
                   <img
                     src={`data:image/svg+xml;base64,${avatar}`}
                     alt="avatar"
-                    key={avatar}
+                    key={index}
                     onClick={() => setSelectedAvatar(index)}
                   />
                 </div>
               );
             })}
           </div>
-          <button onClick={setProfilePicture} className="submit-btn">
+          <button onClick={(e) => setProfilePicture(e)} className="submit-btn">
             Set as Profile Picture
           </button>
+          <ToastContainer />
         </Container>
       )}
-      <ToastContainer />
     </>
   );
-};
+}
 
 const Container = styled.div`
   display: flex;
